@@ -2,61 +2,85 @@ const choices = ["Rock", "Paper", "Scissors"];
 let playerScore = 0;
 let computerScore = 0;
 
+const content = document.createElement('div');
+content.setAttribute('id', 'score');
+
+const rockButton = document.createElement('button');
+rockButton.setAttribute('id', 'rock');
+rockButton.textContent = 'Rock';
+
+const paperButton = document.createElement('button');
+paperButton.textContent = 'Paper';
+paperButton.setAttribute('id', 'paper');
+
+const scissorsButton = document.createElement('button');
+scissorsButton.textContent = 'Scissors';
+scissorsButton.setAttribute('id', 'scissors');
+document.body.append(content, rockButton, paperButton, scissorsButton);
+
 game();
 
 function game()
 {
-    for (let i = 0; i < 5; i++)
-    {
-        playRound(getPlayerChoice(), getComputerChoice());
-    }
-
-    console.log(getGameReport(playerScore, computerScore));
+    const buttons = Array.from(document.querySelectorAll('button'));
+    buttons.forEach(button => button.addEventListener('click', () => {
+        const playerSelection = button.innerText;
+        playRound(playerSelection, getComputerChoice());
+    }));
 }
 
 function playRound(playerSelection, computerSelection)
 {
-    let message;
-
-    if (choices.indexOf(playerSelection) === choices.indexOf(computerSelection))
+    if (GameEnded())
     {
-        message = `Draw! ${playerSelection} cannot beat ${computerSelection}`;
-        console.log(message);
-    }
-    else if (choices.indexOf(playerSelection) === choices.indexOf(computerSelection) - 1 || choices.indexOf(playerSelection) - 2 === choices.indexOf(computerSelection))
-    {
-        message = `You lose! ${playerSelection} beaten by ${computerSelection}`;
-        console.log(message);
-        computerScore++;
+        document.querySelector('#score').textContent = getGameReport();
     }
     else 
     {
-        message = `You won! ${playerSelection} beats ${computerSelection}`;
-        console.log(message);
-        playerScore++;
+        let message;
+        if (choices.indexOf(playerSelection) === choices.indexOf(computerSelection))
+        {
+            message = `Draw! ${playerSelection} cannot beat ${computerSelection}. The score is ${playerScore} : ${computerScore}`;
+            document.querySelector('#score').textContent = message;
+        }
+        else if (choices.indexOf(playerSelection) === choices.indexOf(computerSelection) - 1 || choices.indexOf(playerSelection) - 2 === choices.indexOf(computerSelection))
+        {
+            computerScore++;
+            if (!GameEnded()) 
+            {
+                message = `Computer beats! ${playerSelection} beaten by ${computerSelection}. The score is ${playerScore} : ${computerScore}`;
+                document.querySelector('#score').textContent = message;
+            }
+        }
+        else 
+        {
+            playerScore++;
+            if (!GameEnded())
+            {
+                message = `You beat! ${e.target.innerText} beats ${computerSelection}. The score is ${playerScore} : ${computerScore}`;
+                document.querySelector('#score').textContent = message;
+            }
+        }
+    } {
+        once: false
     }
 }
 
 function getComputerChoice()
 {
-    var randomIndex = Math.floor(Math.random() * choices.length);
-    return choices[randomIndex];
+    return choices[~~(Math.random() * choices.length)];
 }
 
-function getPlayerChoice()
+function GameEnded()
 {
-    let choice = prompt("Chose Rock, Paper or scissors");
-    if (choices.indexOf(choice) !== -1)
+    if (computerScore === 5 || playerScore === 5)
     {
-        return choice;
+        return true;
     }
-    else 
-    {
-        getPlayerChoice();
-    }
+    return false;
 }
 
-function getGameReport(playerScore, computerScore)
+function getGameReport()
 {
     let score = `The final score ${playerScore} - ${computerScore}.`
     let reportMessage;
