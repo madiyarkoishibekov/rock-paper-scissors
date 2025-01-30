@@ -34,6 +34,7 @@ function playRound(playerSelection, computerSelection)
     if (GameEnded())
     {
         document.querySelector('#score').textContent = getGameReport();
+        return;
     }
     else 
     {
@@ -57,12 +58,10 @@ function playRound(playerSelection, computerSelection)
             playerScore++;
             if (!GameEnded())
             {
-                message = `You beat! ${e.target.innerText} beats ${computerSelection}. The score is ${playerScore} : ${computerScore}`;
+                message = `You beat! ${playerSelection} beats ${computerSelection}. The score is ${playerScore} : ${computerScore}`;
                 document.querySelector('#score').textContent = message;
             }
         }
-    } {
-        once: false
     }
 }
 
